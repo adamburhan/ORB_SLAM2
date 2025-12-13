@@ -34,6 +34,7 @@
 #include"PnPsolver.h"
 
 #include<iostream>
+#include<iomanip>
 
 #include<mutex>
 
@@ -146,6 +147,11 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
             mDepthMapFactor = 1.0f/mDepthMapFactor;
     }
 
+    f_track_stats.open("track_thread_poses.txt");
+    f_track_stats << "# frame_id timetamp state tx ty tz qx qy qz qw" << endl;
+    
+    // Initialize last logged pose to zeros (for first frame or if tracking never succeeds)
+    mLastLoggedPose = "0 0 0 0 0 0 0";
 }
 
 void Tracking::SetLocalMapper(LocalMapping *pLocalMapper)
@@ -481,6 +487,33 @@ void Tracking::Track()
 
         if(!mCurrentFrame.mpReferenceKF)
             mCurrentFrame.mpReferenceKF = mpReferenceKF;
+
+        // Here we are logging the camera pose from tracking thread in world reference frame
+        if (f_track_stats.is_open()) 
+        {
+            f_track_stats << mCurrentFrame.mnId << " " << fixed << setprecision(6) << mCurrentFrame.mTimeStamp << " " << (int)mState;
+
+            if (!mCurrentFrame.mTcw.empty())
+            {
+                cv::Mat Rwc = mCurrentFrame.GetRotationInverse();
+                cv::Mat twc = mCurrentFrame.GetCameraCenter();
+                vector<float> q = Converter::toQuaternion(Rwc);
+
+                ostringstream oss;
+                oss << setprecision(7)
+                    << twc.at<float>(0) << " " << twc.at<float>(1) << " " << twc.at<float>(2) << " "
+                    << q[0] << " " << q[1] << " " << q[2] << " " << q[3];
+                mLastLoggedPose = oss.str();
+                
+                f_track_stats << " " << mLastLoggedPose;
+            }
+            else 
+            {
+                // This can happen if tracking is lost - repeat last valid pose like ORB-SLAM does
+                f_track_stats << " " << mLastLoggedPose;
+            }
+            f_track_stats << endl;
+        }
 
         mLastFrame = Frame(mCurrentFrame);
     }

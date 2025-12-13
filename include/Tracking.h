@@ -39,6 +39,7 @@
 #include "System.h"
 
 #include <mutex>
+#include <fstream>
 
 namespace ORB_SLAM2
 {
@@ -214,6 +215,10 @@ protected:
     bool mbRGB;
 
     list<MapPoint*> mlpTemporalPoints;
+
+    // File to log tracking information
+    std::ostream f_track_stats;
+    std::string mLastLoggedPose;
 };
 
 } //namespace ORB_SLAM
