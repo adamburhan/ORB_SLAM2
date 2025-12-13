@@ -217,7 +217,7 @@ protected:
     list<MapPoint*> mlpTemporalPoints;
 
     // File to log tracking information
-    std::ostream f_track_stats;
+    std::ofstream f_track_stats;
     std::string mLastLoggedPose;
 };
 
