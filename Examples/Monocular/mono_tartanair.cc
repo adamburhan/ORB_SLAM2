@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 {
     if(argc != 5)
     {
-        cerr << endl << "Usage: ./mono_kitti path_to_vocabulary path_to_settings path_to_sequence useDisplay" << endl;
+        cerr << endl << "Usage: ./mono_tartanair path_to_vocabulary path_to_settings path_to_sequence useDisplay" << endl;
         return 1;
     }
 
@@ -144,7 +144,7 @@ void LoadImages(const string &strPathToSequence, vector<string> &vstrImageFilena
         }
     }
 
-    string strPrefixLeft = strPathToSequence + "/image_0/";
+    string strPrefixLeft = strPathToSequence + "/image_left/";
 
     const int nTimes = vTimestamps.size();
     vstrImageFilenames.resize(nTimes);
@@ -152,7 +152,7 @@ void LoadImages(const string &strPathToSequence, vector<string> &vstrImageFilena
     for(int i=0; i<nTimes; i++)
     {
         stringstream ss;
-        ss << setfill('0') << setw(10) << i;
-        vstrImageFilenames[i] = strPrefixLeft + ss.str() + ".png";
+        ss << setfill('0') << setw(6) << i;
+        vstrImageFilenames[i] = strPrefixLeft + ss.str() + "_left.png";
     }
 }
