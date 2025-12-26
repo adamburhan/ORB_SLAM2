@@ -20,6 +20,7 @@
 
 
 #include "Tracking.h"
+#include "Config.h"
 
 #include<opencv2/core/core.hpp>
 #include<opencv2/features2d/features2d.hpp>
@@ -147,7 +148,11 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
             mDepthMapFactor = 1.0f/mDepthMapFactor;
     }
 
-    f_track_stats.open("track_thread_poses.txt");
+    // Open tracking stats log file in output path
+    string logPath = Config::outputPath.empty() ? 
+        "track_thread_poses.txt" : 
+        Config::outputPath + "/track_thread_poses.txt";
+    f_track_stats.open(logPath);
     f_track_stats << "# frame_id timetamp state tx ty tz qx qy qz qw" << endl;
     
     // Initialize last logged pose to zeros (for first frame or if tracking never succeeds)

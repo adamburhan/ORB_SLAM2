@@ -28,6 +28,7 @@
 #include<opencv2/core/core.hpp>
 
 #include"System.h"
+#include"Config.h"
 
 using namespace std;
 
@@ -36,11 +37,14 @@ void LoadImages(const string &strSequence, vector<string> &vstrImageFilenames,
 
 int main(int argc, char **argv)
 {
-    if(argc != 5)
+    if(argc != 6)
     {
-        cerr << endl << "Usage: ./mono_tartanair path_to_vocabulary path_to_settings path_to_sequence useDisplay" << endl;
+        cerr << endl << "Usage: ./mono_tartanair path_to_vocabulary path_to_settings path_to_sequence useDisplay output_path" << endl;
         return 1;
     }
+
+    // Set global config for output path (must be set before creating System)
+    ORB_SLAM2::Config::outputPath = string(argv[5]);
 
     // Retrieve paths to images
     vector<string> vstrImageFilenames;
@@ -120,7 +124,9 @@ int main(int argc, char **argv)
     cout << "mean tracking time: " << totaltime/nImages << endl;
 
     // Save camera trajectory
-    SLAM.SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");    
+    string trajectoryPath = ORB_SLAM2::Config::outputPath.empty() ? 
+                            "KeyFrameTrajectory.txt" : ORB_SLAM2::Config::outputPath + "/KeyFrameTrajectory.txt";
+    SLAM.SaveKeyFrameTrajectoryTUM(trajectoryPath);  
 
     return 0;
 }

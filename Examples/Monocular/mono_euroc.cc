@@ -27,6 +27,7 @@
 #include<opencv2/core/core.hpp>
 
 #include<System.h>
+#include"Config.h"
 
 using namespace std;
 
@@ -35,15 +36,19 @@ void LoadImages(const string &strImagePath, const string &strPathTimes,
 
 int main(int argc, char **argv)
 {
-    if(argc != 5)
+    if(argc != 7)
     {
-        cerr << endl << "Usage: ./mono_tum path_to_vocabulary path_to_settings path_to_image_folder path_to_times_file" << endl;
+        cerr << endl << "Usage: ./mono_euroc path_to_vocabulary path_to_settings path_to_image_folder path_to_times_file useDisplay output_path" << endl;
         return 1;
     }
+
+    // Set global config for output path (must be set before creating System)
+    ORB_SLAM2::Config::outputPath = string(argv[6]);
 
     // Retrieve paths to images
     vector<string> vstrImageFilenames;
     vector<double> vTimestamps;
+    bool useDisplay = (string(argv[5]) == "true" || string(argv[5]) == "1");
     LoadImages(string(argv[3]), string(argv[4]), vstrImageFilenames, vTimestamps);
 
     int nImages = vstrImageFilenames.size();
@@ -55,7 +60,7 @@ int main(int argc, char **argv)
     }
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    ORB_SLAM2::System SLAM(argv[1],argv[2],ORB_SLAM2::System::MONOCULAR,true);
+    ORB_SLAM2::System SLAM(argv[1],argv[2],ORB_SLAM2::System::MONOCULAR,useDisplay);
 
     // Vector for tracking time statistics
     vector<float> vTimesTrack;
@@ -125,7 +130,9 @@ int main(int argc, char **argv)
     cout << "mean tracking time: " << totaltime/nImages << endl;
 
     // Save camera trajectory
-    SLAM.SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
+    string trajectoryPath = ORB_SLAM2::Config::outputPath.empty() ? 
+                            "KeyFrameTrajectory.txt" : ORB_SLAM2::Config::outputPath + "/KeyFrameTrajectory.txt";
+    SLAM.SaveKeyFrameTrajectoryTUM(trajectoryPath); 
 
     return 0;
 }
