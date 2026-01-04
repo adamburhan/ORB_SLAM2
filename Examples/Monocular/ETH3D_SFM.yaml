@@ -1,0 +1,46 @@
+%YAML:1.0
+
+#--------------------------------------------------------------------------------------------
+# Camera Parameters (Specific to "sfm_" sequences)
+# Covers: sfm_bench, sfm_garden, sfm_house_loop, sfm_lab_room...
+#--------------------------------------------------------------------------------------------
+Camera.fx: 726.21081542969
+Camera.fy: 726.21081542969
+Camera.cx: 359.2048034668
+Camera.cy: 202.47247314453
+
+# Zero distortion (Pre-rectified)
+Camera.k1: 0.0
+Camera.k2: 0.0
+Camera.p1: 0.0
+Camera.p2: 0.0
+Camera.k3: 0.0
+
+# FPS (Documentation says sfm sequences are ~13.6 Hz)
+Camera.fps: 13.6
+
+# RGB Order
+Camera.RGB: 1
+
+#--------------------------------------------------------------------------------------------
+# ORB Parameters (Same as standard)
+#--------------------------------------------------------------------------------------------
+ORBextractor.nFeatures: 1000
+ORBextractor.scaleFactor: 1.2
+ORBextractor.nLevels: 8
+ORBextractor.iniThFAST: 20
+ORBextractor.minThFAST: 7
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters
+#--------------------------------------------------------------------------------------------
+Viewer.KeyFrameSize: 0.05
+Viewer.KeyFrameLineWidth: 1
+Viewer.GraphLineWidth: 0.9
+Viewer.PointSize: 2
+Viewer.CameraSize: 0.08
+Viewer.CameraLineWidth: 3
+Viewer.ViewpointX: 0
+Viewer.ViewpointY: -0.7
+Viewer.ViewpointZ: -1.8
+Viewer.ViewpointF: 500

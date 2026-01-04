@@ -115,3 +115,7 @@ target_link_libraries(mono_euroc ${PROJECT_NAME})
 add_executable(mono_tartanair
 Examples/Monocular/mono_tartanair.cc)
 target_link_libraries(mono_tartanair ${PROJECT_NAME})
+
+add_executable(mono_eth3d 
+Examples/Monocular/mono_eth3d.cc)
+target_link_libraries(mono_eth3d ${PROJECT_NAME})
